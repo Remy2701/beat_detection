@@ -1,0 +1,119 @@
+classes: {
+    io: {
+        shape: hexagon
+    }
+    process: {
+        shape: rectangle
+    }
+}
+
+Signal: Signal {
+    class: io
+}
+
+DetectSub: Detect Sub Beats {
+    class: process
+    Signal: Signal {
+        class: io
+    }
+    FilterSub: Filter Sub {
+        class: process
+    }
+    SplitBlocks: Split Into Blocks {
+        class: process
+    }
+    ComputeEnergy: Compute Energy {
+        class: process
+    }
+    ComputeAverage: Compute Average {
+        class: process
+    }
+    ComputeVariance: Compute Variance {
+        class: process
+    }
+    DetectBeats: Detect Beats {
+        class: process
+    }
+    CorrectBeats: Correct Beats {
+        class: process
+    }
+    Beats: Beats {
+        class: io
+    }
+
+    Signal -> FilterSub
+    FilterSub -> SplitBlocks
+    SplitBlocks -> ComputeEnergy
+    ComputeEnergy -> ComputeAverage
+    ComputeEnergy -> ComputeVariance
+    ComputeAverage -> DetectBeats
+    ComputeVariance -> DetectBeats
+    DetectBeats -> CorrectBeats
+    CorrectBeats -> Beats
+}
+
+DetectLow: Detect Low Beats {
+    class: process
+    Signal: Signal {
+        class: io
+    }
+    FilterLow: Filter Low {
+        class: process
+    }
+    SplitBlocks: Split Into Blocks {
+        class: process
+    }
+    ComputeEnergy: Compute Energy {
+        class: process
+    }
+    ComputeAverage: Compute Average {
+        class: process
+    }
+    ComputeVariance: Compute Variance {
+        class: process
+    }
+    DetectBeats: Detect Beats {
+        class: process
+    }
+    CorrectBeats: Correct Beats {
+        class: process
+    }
+    Beats: Beats {
+        class: io
+    }
+
+    Signal -> FilterLow
+    FilterLow -> SplitBlocks
+    SplitBlocks -> ComputeEnergy
+    ComputeEnergy -> ComputeAverage
+    ComputeEnergy -> ComputeVariance
+    ComputeAverage -> DetectBeats
+    ComputeVariance -> DetectBeats
+    DetectBeats -> CorrectBeats
+    CorrectBeats -> Beats
+
+}
+
+CombineBeats: Combine Sub & Low Beats {
+    class: process
+}
+
+CorrectBeatsW: Correct beats (weighted) {
+    class: process
+}
+
+MapToTime: Map beats to time {
+    class: process
+}
+
+BeatsTime: Time of beats {
+    class: io
+}
+
+Signal -> DetectSub
+Signal -> DetectLow
+DetectSub -> CombineBeats
+DetectLow -> CombineBeats
+CombineBeats -> CorrectBeatsW
+CorrectBeatsW -> MapToTime
+MapToTime -> BeatsTime
